@@ -1,8 +1,9 @@
 var $ = require('jquery');
 var CodeMirror = require('CodeMirror');
 require('CodeMirror/mode/javascript/javascript');
-
+var esprima = require('esprima'); 
 var js2glsl = require('js2glsl');
+var nodeUtils = require('js2glsl/libs/nodeUtils');
 
 var canvas = $("canvas")[0];
 
@@ -31,9 +32,16 @@ function VertexPosition() {
 };
 
 function setupShader() {
-    var jsSource = VertexPosition.toString() + "\r\n" + editor.doc.getValue();
+    
+    var jsSource = editor.doc.getValue();
+    var ast = esprima.parse(jsSource);
+    
+    if(nodeUtils.getFunctionByName(ast, "VertexPosition") === undefined) {
+        ast.body.push( esprima.parse(VertexPosition.toString()).body[0] ); 
+    }
+    
     try {
-    var shaderSource = js2glsl(jsSource); 
+    var shaderSource = js2glsl(ast); 
     
         var shader = createShader(gl,
             shaderSource.vertex,
@@ -58,11 +66,13 @@ function setupShader() {
 
 $("#go").on('click', setupShader); 
 setupShader();
+var start = Date.now();
 function render() {
-    gl.shader && (gl.shader.uniforms.t += 0.01); 
-    
+    if(gl.shader)  {
+        gl.shader.uniforms.t = (Date.now() - start) / 1000.0;        
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
       //Draw 
-    gl.shader && gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     window.requestAnimationFrame(render);
 }
 

@@ -1,6 +1,11 @@
 <html>
 <head>   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.5.0/codemirror.css">    
+    <style>
+        .CodeMirror {
+            height: auto; 
+        }
+    </style>
 </head>
 <body>    
     <div style="border: 1px solid black;width: 500px;position:relative;min-height:500px">
@@ -10,23 +15,56 @@
     <div style="position:absolute;left:515px;right:0px;top:8px;border: 1px solid black;height:500px;">
         <button id="go">Compile</button>
         <button id="report">Report</button>
-        <textarea style="height: 100px; display:none">
-function fmod(a,b) { return a - (Math.floor(a / b) * b); };
+        <textarea style="width:100%;height:100%;display:none">
+// VertexPosition is a special function; whatever it returns is what glPosition ends up being.
+//	In this toy example, you can just comment this out -- a reasonable one is hard coded in 
+function VertexPosition() {  
+  	// All varyings are specified via 'varyings.<name>'. Attributes with 'attributes.<name>'
+  	// 
+	// Currently, you can't use attributes in FragmentColor; you must create a varying for it.
+  	// in the future, it might auto-transfer used attributes in the fragment shader into 
+    // varyings; it remains to be seen if this is a good idea. 
+    varyings.pt = attributes.pt; 
+  
+  	// uniforms.<name> 
+  	var t = uniforms.t;
+  
+  	// You can return whatever size array/vector; it automatically completes the vector for 
+  	// you with all 0's, except for 1 as the last element.
+    return [Math.cos(t) * attributes.pt[0] + Math.sin(t) * attributes.pt[1], 
+            Math.sin(t) * attributes.pt[0] - Math.cos(t) * attributes.pt[1] ]; 
+};
 
+/** FragmentColor is a special function; it tries to resolve to a vector and that is 
+	what is used to set the fragment color */    
 function FragmentColor() { 
-	var x = varyings.pt[0];
-    var y = varyings.pt[1];
-  	var t = (x * y > 0) ? uniforms.t : uniforms.t * 10; 
+  	var x = varyings.pt[0];
+    var y = varyings.pt[1];  	
+  	  	
+  	var t = (x * y > 0) ? uniforms.t : uniforms.t * 2; 
+  
+    // A handful of Math.x functions are mapped to the GLSL equivalents
     var dist = Math.sqrt(x*x + y*y);
     var threshold = Math.abs(Math.cos(t));
     var rim = .01;
-    if(dist > (threshold-rim) && dist <  (threshold+rim)) 
+    if(dist > (threshold-rim) && dist <  (threshold+rim)) {
+      	// Returning nothing in a FragmentColor function
+        // is equivalent to performing a GLSL 'discard' -- it 
+      	// simply does nothing with the fragment
     	return;
-    if(dist > threshold){
-    	return [fmod(x, 1.0), fmod(y, 1.0), 0.5*(Math.cos(t)+1.0), 1.0];
     }
-    return [0.5*(x+1.0), 0.5*(y+1.0) , 0.5*(Math.cos(t)+1.0), 1.0]; 
+    if(dist > threshold){
+    	return [fmod(x, 1.0), fmod(y, 1.0), 0.5*(Math.cos(t)+1.0)];
+    }  	
+  	// FragmentColor, like VertexPosition, will fill out the vec4 for you if you
+  	// dont. You do have to be consistent though -- Since we returned a vector of 3
+  	// above, we have to here. Otherwise it is a type error. For example:
+  	// return [1, 1, 1, 1]; // wont work. 
+    return [0.5*(x+1.0), 0.5*(y+1.0) , 0.5*(Math.cos(t)+1.0)]; 
 };
+
+/** Functions you define automatically get pulled in if they are used */
+function fmod(a,b) { return a - (Math.floor(a / b) * b); };
 </textarea>        
     <div>    
     <script src="js/libs/bundle.js"></script>
