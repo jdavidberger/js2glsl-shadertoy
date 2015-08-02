@@ -1,0 +1,34 @@
+<html>
+<head>   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.5.0/codemirror.css">    
+</head>
+<body>    
+    <div style="border: 1px solid black;width: 500px;position:relative;min-height:500px">
+        <canvas width="500px" height="500px"></canvas>
+        <div id="errors" style="position:absolute;top:0px;bottom:0px;white-space: pre;overflow: scroll;right:0px;left:0px"></div>
+    </div>
+    <div style="position:absolute;left:515px;right:0px;top:8px;border: 1px solid black;height:500px;">
+        <button id="go">Compile</button>
+        <button id="report">Report</button>
+        <textarea style="height: 100px; display:none">
+function fmod(a,b) { return a - (Math.floor(a / b) * b); };
+
+function FragmentColor() { 
+	var x = varyings.pt[0];
+    var y = varyings.pt[1];
+  	var t = (x * y > 0) ? uniforms.t : uniforms.t * 10; 
+    var dist = Math.sqrt(x*x + y*y);
+    var threshold = Math.abs(Math.cos(t));
+    var rim = .01;
+    if(dist > (threshold-rim) && dist <  (threshold+rim)) 
+    	return;
+    if(dist > threshold){
+    	return [fmod(x, 1.0), fmod(y, 1.0), 0.5*(Math.cos(t)+1.0), 1.0];
+    }
+    return [0.5*(x+1.0), 0.5*(y+1.0) , 0.5*(Math.cos(t)+1.0), 1.0]; 
+};
+</textarea>        
+    <div>    
+    <script src="js/libs/bundle.js"></script>
+</body>
+</html>

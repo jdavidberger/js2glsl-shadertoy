@@ -1,0 +1,25 @@
+{
+  "name": "js2glsl-shadertoy",
+  "version": "0.0.1",
+  "description": "Shadertoy variant for js2glsl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jdavidberger/js2glsl-shadertoy"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jdavidberger/js2glsl-shadertoy/issues"
+  },
+  "homepage": "https://github.com/jdavidberger/js2glsl-shadertoy",
+  "dependencies": {
+    "codemirror": "^5.5.0",
+    "gl-shader": "^4.0.5",
+    "jquery": "^2.1.4",
+    "js2glsl": "git://github.com/jdavidberger/js2glsl"
+  }
+}
