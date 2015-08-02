@@ -65,6 +65,9 @@ function setupShader() {
 }
 
 $("#go").on('click', setupShader); 
+$("#report").on('click', function() {
+    window.open('https://github.com/jdavidberger/js2glsl/issues', '_blank');
+});
 setupShader();
 var start = Date.now();
 function render() {
