@@ -10,12 +10,16 @@
 <body>    
     <div style="border: 1px solid black;width: 500px;position:relative;min-height:500px">
         <canvas width="500px" height="500px"></canvas>
-        <div id="errors" style="position:absolute;top:0px;bottom:0px;white-space: pre;overflow: scroll;right:0px;left:0px"></div>
+        <div id="errors" style="position:absolute;top:0px;bottom:0px;overflow: scroll;right:0px;left:0px"></div>
     </div>
-    <div style="position:absolute;left:515px;right:0px;top:8px;border: 1px solid black;height:500px;">
+    <div style="position:absolute;left:515px;right:8px;top:8px;bottom:24px">
         <button id="go">Compile</button>
         <button id="report">Report</button>
-        <textarea style="width:100%;height:100%;display:none">
+        <button id="toggle">Toggle view</button>
+        <button id="save">Save</button>
+        <textarea id="glslsrc" style="width:100%;height:100%;display:none">
+        </textarea>
+        <textarea id="jssrc" style="width:100%;height:100%;display:none">
 // VertexPosition is a special function; whatever it returns is what glPosition ends up being.
 //	In this toy example, you can just comment this out -- a reasonable one is hard coded in 
 function VertexPosition() {  
